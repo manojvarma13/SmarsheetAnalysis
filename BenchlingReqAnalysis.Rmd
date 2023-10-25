@@ -1,0 +1,72 @@
+---
+title: "R Notebook"
+output: html_notebook
+---
+# Load the readxl package for reading Excel files
+library(readxl)
+library(plotly)
+library(dplyr)
+library(tidyverse)
+library(magrittr) 
+library(rbokeh)
+library(flexdashboard)
+
+
+# Specify the path to the Excel file
+excel_file <- "/Users/mtekumalla/Downloads/2023-08-21-Smartsheet_analysis.xlsx"
+
+# Read the Excel file
+data <- read_excel(excel_file)
+head(data)
+
+# Check if the object is a data frame
+if (!is.data.frame(data)) {
+  # If it's not a data frame, convert it to one
+  data <- as.data.frame(data)
+}
+
+# Now 'data' contains the data frame
+class(data)
+typeof(data)
+head(data)
+head(data$'Email of Submitter')
+data$'Created Date' <- as.Date(data$'Created Date')
+filtered_data <- data[data$'Created Date' > as.Date("2023-05-23"), ]
+
+name_counts <- table(filtered_data$'Email of Submitter')
+head(name_counts)
+top_10_names <- head(sort(name_counts, decreasing = TRUE), 10)
+top_10_names
+top_10_df <- as.data.frame(top_10_names)
+colnames(top_10_df) <- c("Name", "Frequency")
+top_10_df
+
+
+# Assuming you have your data frame 'top_10_names_df' containing the top 10 names and their frequencies
+
+
+
+
+# Assuming you have your data frame 'top_10_names_df' containing the top 10 names and their frequencies
+
+# Load the necessary library
+library(plotly)
+
+# Create a custom color palette
+colors <- c("#66c2a5", "#fc8d62", "#8da0cb", "#e78ac3", "#a6d854", "#ffd92f", "#e5c494", "#b3b3b3", "#1f78b4", "#ff7f00")
+
+# Create a figure
+histogram <- plot_ly(data = top_10_df, x = ~Name, y = ~Frequency, type = "bar", marker = list(color = colors))
+
+# Update the layout with titles and labels
+histogram <- layout(
+  histogram,
+  title = "Top 10 Names and Their Frequencies",
+  xaxis = list(title = "Name"),
+  yaxis = list(title = "Frequency")
+)
+
+# Show the plot (in RStudio, this should render an interactive plot)
+histogram
+
+
